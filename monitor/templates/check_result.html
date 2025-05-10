@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Results for {{ email }}</h2>
+    
+    {% if error %}
+      <div class="alert alert-danger">
+        Error checking breaches: {{ error }}
+      </div>
+    {% elif is_breached %}
+      <div class="alert alert-danger">
+        <h4>Breach Found!</h4>
+        <p>This email appears in the following breaches:</p>
+        <ul class="list-group">
+          {% for breach in breaches %}
+            <li class="list-group-item">
+              {{ breach }}  {# LeakCheck returns breach names as strings #}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <div class="alert alert-success">
+        No breaches found for this email
+      </div>
+    {% endif %}
+    
+    <a href="{% url 'check_credential' %}" class="btn btn-primary">
+      Check Another Email
+    </a>
+  </div>
+{% endblock %}

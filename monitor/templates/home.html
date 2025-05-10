@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="col-md-8 text-center animate__animated animate__fadeIn">
+    <h1 class="display-3 fw-bold mb-4 text-primary animate__animated animate__fadeInDown">
+      <i class="bi bi-shield-lock-fill"></i> Welcome to <span class="text-dark">DarkWebMonitor</span>
+    </h1>
+    <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+      Protect your credentials from dark web leaks.  
+      <br>
+      <span class="text-info">Sign up now to monitor and get breach alerts in real time.</span>
+    </p>
+    <a href="{% url 'signup' %}" class="btn btn-lg btn-primary shadow-lg btn-animated animate__animated animate__pulse animate__infinite">
+      <i class="bi bi-person-plus"></i> Sign Up
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="row animate__animated animate__fadeIn">
+    <div class="col">
+      <h2 class="mb-4 fw-bold text-primary animate__animated animate__fadeInLeft">Welcome, {{ user.username }}!</h2>
+    </div>
+  </div>
+
+  {% if breach_errors %}
+    <div class="alert alert-warning shadow-sm animate__animated animate__shakeX">
+      <strong>Some credentials could not be checked:</strong><br>
+      {% for email, error in breach_errors.items %}
+        <strong>{{ email }}:</strong> {{ error }}<br>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-8 animate-on-scroll">
+      <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-shield-lock"></i> Your Monitored Credentials</h5>
+        </div>
+        <div class="card-body">
+          {% if credentials %}
+            <table class="table table-hover align-middle animate__animated animate__fadeInUp">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for credential in credentials %}
+                  <tr class="animate-on-scroll">
+                    <td>{{ credential.email }}</td>
+                    <td>{{ credential.phone_number }}</td>
+                    <td>
+                      {% if credential.is_breached %}
+                        <span class="badge bg-danger animate__animated animate__pulse animate__infinite">
+                          <i class="bi bi-exclamation-triangle"></i> Breached
+                        </span>
+                      {% else %}
+                        <span class="badge bg-success animate__animated animate__pulse animate__infinite">
+                          <i class="bi bi-check-circle"></i> Safe
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if credential.is_breached and credential.breach_details %}
+                        <button class="btn btn-outline-warning btn-sm mb-1" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#breachDetails{{ forloop.counter }}"
+                                aria-expanded="false"
+                                aria-controls="breachDetails{{ forloop.counter }}">
+                          Show Details
+                        </button>
+                      {% endif %}
+                      <form method="post" action="{% url 'delete_credential' credential.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm btn-animated" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  {% if credential.is_breached and credential.breach_details %}
+                  <tr class="collapse" id="breachDetails{{ forloop.counter }}">
+                    <td colspan="4">
+                      <div class="alert alert-warning mb-0">
+                        <strong>Breach Details:</strong>
+                        <ul class="mb-0">
+                          {% for breach in credential.breach_details %}
+                            <li>
+                              <b>{{ breach.Name|default:breach.name }}</b>
+                              {% if breach.BreachDate or breach.date %}- {{ breach.BreachDate|default:breach.date }}{% endif %}
+                              {% if breach.DataClasses or breach.data_classes %}
+                                <br>
+                                <span class="text-muted small">
+                                  Leaked: {{ breach.DataClasses|default:breach.data_classes|join:", " }}
+                                </span>
+                              {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <p class="text-muted">No credentials added yet. <a href="{% url 'add_credential' %}">Add a credential</a> to get started!</p>
+          {% endif %}
+          <a href="{% url 'add_credential' %}" class="btn btn-primary mt-2 btn-animated">
+            <i class="bi bi-plus-circle"></i> Add Credential
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 animate-on-scroll">
+      <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <a href="{% url 'add_credential' %}" class="text-decoration-none"><i class="bi bi-plus-circle"></i> Add Credential</a>
+            </li>
+            <li class="list-group-item">
+              <a href="{% url 'check_credential' %}" class="text-decoration-none"><i class="bi bi-search"></i> Check for Breaches</a>
+            </li>
+            <li class="list-group-item">
+              <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0" style="color:inherit;text-decoration:none;">
+                  <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Photo Breach Monitoring Card -->
+      <div class="card shadow mb-4 animate__animated animate__fadeInUp">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="bi bi-image"></i> Photo Breach Monitoring</h5>
+        </div>
+        <div class="card-body">
+          <p>
+            Want to know if your photos appear on the web or dark web? Use <b>Pixsy</b> to monitor up to <b>500 images for free</b>!
+          </p>
+          <a href="https://www.pixsy.com/" target="_blank" class="btn btn-success btn-animated mb-2">
+            <i class="bi bi-link-45deg"></i> Try Pixsy Free
+          </a>
+          <ul class="mt-2 mb-0">
+            <li>Sign up for a free Pixsy account</li>
+            <li>Upload your images</li>
+            <li>Get notified if your images are found online</li>
+          </ul>
+        </div>
+      </div>
+      <!-- End Photo Breach Monitoring Card -->
+
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <h1>Welcome, {{ user.username }}!</h1>
+    <!-- Add your dashboard content here -->
+    <h2>Your Monitored Credentials</h2>
+    <ul>
+        {% for credential in credentials %}
+            <li>{{ credential.email }} - {{ credential.phone_number }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'add_credential' %}" class="btn btn-success">Add Credential</a>
+    
+{% endblock %}
