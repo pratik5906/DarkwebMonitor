@@ -18,10 +18,10 @@ The app features real-time breach detection, detailed breach reports, a responsi
 ---
 
 ## Screenshots
-![Dashboard Screenshot
+![Dashboard Screenshot]
 ![Screenshot 2025-05-10 at 11 03 37 AM](https://github.com/user-attachments/assets/1815b2ee-11d3-4ec8-aed0-766e5e676609)
 
-![Login Screenshot](screenshots/login.png)
+![Login Screenshot]
 <img width="1470" alt="Screenshot 2025-05-10 at 11 08 26 AM" src="https://github.com/user-attachments/assets/5ade3afe-bc56-4314-b4e8-95d11b45b87e" />
 
 ---
